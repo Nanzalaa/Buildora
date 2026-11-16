@@ -1,6 +1,6 @@
 # Image credits
 
-All photos are from Wikimedia Commons and are used under their stated licences.
+Photos are from Wikimedia Commons.
 
 | File | Author | Licence | Source |
 |---|---|---|---|

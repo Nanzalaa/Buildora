@@ -2,7 +2,7 @@
 
 Buildora is an online hardware shop where you can buy building materials like cement, steel, timber, roofing sheets, pipes, paint and tools.
 
-I built it with plain HTML, CSS and JavaScript.
+Designed and developed by Nanzalaa using plain HTML, CSS and JavaScript.
 
 ## What you can do on the site
 

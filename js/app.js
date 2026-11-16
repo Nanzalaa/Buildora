@@ -1,11 +1,9 @@
-// Shared logic used on every page: cart storage, header, product cards, toasts.
-
 const CART_KEY = "buildora_cart";
 const ORDERS_KEY = "buildora_orders";
 const DELIVERY_FEE = 500;
 const FREE_DELIVERY_OVER = 20000;
 
-/* ---------- Helpers ---------- */
+// Helpers
 function formatPrice(amount) {
   return "KSh " + amount.toLocaleString("en-KE");
 }
@@ -16,7 +14,7 @@ function escapeHTML(str) {
   return div.innerHTML;
 }
 
-/* ---------- Cart (stored in localStorage) ---------- */
+// Cart
 function getCart() {
   try {
     return JSON.parse(localStorage.getItem(CART_KEY)) || [];
@@ -70,11 +68,10 @@ function clearCart() {
   saveCart([]);
 }
 
-// Returns cart items joined with product details, plus totals.
 function getCartSummary() {
   const items = getCart()
     .map((i) => ({ ...getProduct(i.id), qty: i.qty }))
-    .filter((i) => i.id); // drop items whose product no longer exists
+    .filter((i) => i.id);
   const subtotal = items.reduce((sum, i) => sum + i.price * i.qty, 0);
   const delivery = subtotal === 0 || subtotal >= FREE_DELIVERY_OVER ? 0 : DELIVERY_FEE;
   const count = items.reduce((sum, i) => sum + i.qty, 0);
@@ -89,7 +86,7 @@ function updateCartCount() {
   });
 }
 
-/* ---------- UI pieces ---------- */
+// Product cards and messages
 function showToast(message, type = "success") {
   let container = document.querySelector(".toast-container");
   if (!container) {
@@ -132,7 +129,7 @@ function productCard(product) {
     </article>`;
 }
 
-/* ---------- Header / footer (injected so every page shares one copy) ---------- */
+// Header and footer
 function renderHeader() {
   const page = location.pathname.split("/").pop() || "index.html";
   const link = (href, label) =>

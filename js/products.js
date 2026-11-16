@@ -1,7 +1,4 @@
-// Product catalogue for Buildora.
-// In a real project this would come from a database / API.
-// Each product's photo lives at images/products/product-<id>.jpg;
-// `cover` is the product whose photo represents the category.
+// Categories and products
 const CATEGORIES = [
   { id: "cement", name: "Cement and Concrete", cover: 1 },
   { id: "steel", name: "Steel and Metal", cover: 5 },
