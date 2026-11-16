@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Buildora - Building Materials and Hardware</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header id="site-header"></header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-content">
+        <h1>Everything you need to <span>build</span>, delivered to your site.</h1>
+        <p>Cement, steel, roofing, timber, plumbing and tools at fair prices. Order online and we'll handle delivery.</p>
+        <div class="hero-buttons">
+          <a href="shop.html" class="btn">Shop Now</a>
+          <a href="about.html" class="btn btn-outline">Learn More</a>
+        </div>
+      </div>
+    </section>
+
+    <div class="container">
+      <div class="features">
+        <div class="feature"><h4>Site Delivery</h4><p>Straight to your construction site</p></div>
+        <div class="feature"><h4>Quality Assured</h4><p>KEBS-certified materials</p></div>
+        <div class="feature"><h4>M-Pesa Payments</h4><p>Pay safely on delivery or online</p></div>
+        <div class="feature"><h4>Expert Advice</h4><p>Help with quantity estimates</p></div>
+      </div>
+    </div>
+
+    <section class="section container">
+      <h2 class="section-title">Shop by Category</h2>
+      <p class="section-sub">Find the right materials for every stage of your project.</p>
+      <div class="category-grid" id="category-grid"></div>
+    </section>
+
+    <section class="section container" style="padding-top:0">
+      <div class="section-head">
+        <div>
+          <h2 class="section-title">Featured Products</h2>
+          <p class="section-sub">Our most popular materials this month.</p>
+        </div>
+        <a href="shop.html" class="btn btn-outline btn-sm" style="margin-bottom:28px">View all products</a>
+      </div>
+      <div class="product-grid" id="featured-grid"></div>
+    </section>
+
+    <section class="section container" style="padding-top:0">
+      <div class="vm-grid">
+        <div class="vm-card">
+          <span class="label">Our Vision</span>
+          <h3>To be the foundation behind every great build in East Africa.</h3>
+          <p><a href="about.html" style="text-decoration:underline">Read our story</a></p>
+        </div>
+        <div class="vm-card mission">
+          <span class="label">Our Mission</span>
+          <h3>Quality materials, fair prices, delivered on time, every time.</h3>
+          <p>Build better. Build with Buildora.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="cta">
+        <div>
+          <h2>Get deals on bulk orders</h2>
+          <p>Subscribe for weekly price updates and contractor discounts.</p>
+        </div>
+        <form id="newsletter-form">
+          <input type="email" placeholder="Your email address" required aria-label="Email address">
+          <button class="btn btn-dark" type="submit">Subscribe</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer id="site-footer"></footer>
+
+  <script src="js/products.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    document.getElementById("category-grid").innerHTML = CATEGORIES.map((c) => `
+      <a href="shop.html?category=${c.id}" class="category-card">
+        <img src="${productImageSrc(c.cover)}" alt="${c.name}" loading="lazy">
+        <span>${c.name}</span>
+      </a>`).join("");
+
+    document.getElementById("featured-grid").innerHTML =
+      PRODUCTS.filter((p) => p.featured).map(productCard).join("");
+
+    document.getElementById("newsletter-form").addEventListener("submit", (e) => {
+      e.preventDefault();
+      e.target.reset();
+      showToast("Thanks for subscribing!");
+    });
+  </script>
+</body>
+</html>

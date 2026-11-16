@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product - Buildora</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header id="site-header"></header>
+
+  <main class="section container" id="product-page"></main>
+
+  <footer id="site-footer"></footer>
+
+  <script src="js/products.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    const id = new URLSearchParams(location.search).get("id");
+    const product = getProduct(id);
+    const page = document.getElementById("product-page");
+
+    if (!product) {
+      page.innerHTML = `
+        <div class="empty-state">
+          <h2>Product not found</h2>
+          <p>The product you're looking for doesn't exist.</p>
+          <a href="shop.html" class="btn">Back to shop</a>
+        </div>`;
+    } else {
+      const cat = getCategory(product.category);
+      document.title = `${product.name} - Buildora`;
+      const stockLabel = product.stock > 50
+        ? `<span class="stock in">In stock</span>`
+        : `<span class="stock low">Only ${product.stock} left</span>`;
+
+      page.innerHTML = `
+        <div class="breadcrumb">
+          <a href="index.html">Home</a> / <a href="shop.html">Shop</a> /
+          <a href="shop.html?category=${cat.id}">${cat.name}</a> / ${escapeHTML(product.name)}
+        </div>
+
+        <div class="product-detail">
+          ${productImage(product, "large")}
+          <div>
+            <span class="product-cat">${cat.name}</span>
+            <h1>${escapeHTML(product.name)}</h1>
+            <p style="margin-top:12px">
+              <span class="price">${formatPrice(product.price)}</span>
+              <span class="unit">per ${product.unit}</span>
+            </p>
+            <p class="desc">${escapeHTML(product.description)}</p>
+            ${stockLabel}
+
+            <div class="buy-row">
+              <label>Quantity
+                <input type="number" id="qty" class="qty-input" value="1" min="1" max="${product.stock}">
+              </label>
+              <button class="btn" id="add-btn">Add to Cart</button>
+              <button class="btn btn-dark" id="buy-btn">Buy Now</button>
+            </div>
+
+            <ul class="spec-list">
+              <li><span>Product code</span><span>BLD-${String(product.id).padStart(4, "0")}</span></li>
+              <li><span>Sold per</span><span>${product.unit}</span></li>
+              <li><span>Available</span><span>${product.stock} units</span></li>
+              <li><span>Delivery</span><span>1 to 3 business days</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <h2 class="section-title" style="margin-top:56px">Related Products</h2>
+        <p class="section-sub">More from ${cat.name}</p>
+        <div class="product-grid" id="related"></div>`;
+
+      const qtyInput = document.getElementById("qty");
+      const getQty = () => Math.max(1, Math.min(product.stock, parseInt(qtyInput.value) || 1));
+
+      qtyInput.onchange = () => (qtyInput.value = getQty());
+
+      document.getElementById("add-btn").onclick = () => addToCart(product.id, getQty());
+      document.getElementById("buy-btn").onclick = () => {
+        addToCart(product.id, getQty());
+        location.href = "cart.html";
+      };
+
+      const related = PRODUCTS.filter((p) => p.category === product.category && p.id !== product.id).slice(0, 4);
+      document.getElementById("related").innerHTML = related.map(productCard).join("");
+    }
+  </script>
+</body>
+</html>

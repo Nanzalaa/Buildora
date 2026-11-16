@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Cart - Buildora</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header id="site-header"></header>
+
+  <main class="section container">
+    <h1 class="section-title">Your Cart</h1>
+    <p class="section-sub">Review your items before checking out.</p>
+    <div id="cart-content"></div>
+  </main>
+
+  <footer id="site-footer"></footer>
+
+  <script src="js/products.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    function renderCart() {
+      const { items, subtotal, delivery, total, count } = getCartSummary();
+      const content = document.getElementById("cart-content");
+
+      if (items.length === 0) {
+        content.innerHTML = `
+          <div class="empty-state">
+            <h2>Your cart is empty</h2>
+            <p>Looks like you haven't added any materials yet.</p>
+            <a href="shop.html" class="btn">Start shopping</a>
+          </div>`;
+        return;
+      }
+
+      content.innerHTML = `
+        <div class="cart-layout">
+          <div class="cart-items">
+            ${items.map((item) => `
+              <div class="cart-item">
+                ${productImage(item, "small")}
+                <div class="cart-item-info">
+                  <a href="product.html?id=${item.id}">${escapeHTML(item.name)}</a>
+                  <small>${formatPrice(item.price)} / ${item.unit}</small>
+                  <button class="btn-link" onclick="removeItem(${item.id})">Remove</button>
+                </div>
+                <input type="number" class="qty-input" value="${item.qty}" min="1" max="${item.stock}"
+                       onchange="changeQty(${item.id}, parseInt(this.value) || 1)" aria-label="Quantity">
+                <div class="cart-item-total">${formatPrice(item.price * item.qty)}</div>
+              </div>`).join("")}
+          </div>
+
+          <aside class="summary">
+            <h3>Order Summary</h3>
+            <div class="summary-row"><span>Items (${count})</span><span>${formatPrice(subtotal)}</span></div>
+            <div class="summary-row"><span>Delivery</span><span>${delivery === 0 ? "FREE" : formatPrice(delivery)}</span></div>
+            <div class="summary-row total"><span>Total</span><span>${formatPrice(total)}</span></div>
+            <p class="note">${delivery === 0
+              ? "You qualify for free delivery!"
+              : `Add ${formatPrice(FREE_DELIVERY_OVER - subtotal)} more for free delivery.`}</p>
+            <a href="checkout.html" class="btn btn-block" style="text-align:center">Proceed to Checkout</a>
+            <a href="shop.html" class="btn btn-outline btn-block" style="text-align:center">Continue Shopping</a>
+            <button class="btn-link" style="margin-top:12px" onclick="emptyCart()">Clear cart</button>
+          </aside>
+        </div>`;
+    }
+
+    function changeQty(id, qty) {
+      const product = getProduct(id);
+      if (qty > product.stock) showToast(`Only ${product.stock} in stock`, "error");
+      updateQty(id, qty);
+      renderCart();
+    }
+
+    function removeItem(id) {
+      removeFromCart(id);
+      showToast("Item removed");
+      renderCart();
+    }
+
+    function emptyCart() {
+      if (confirm("Remove all items from your cart?")) {
+        clearCart();
+        renderCart();
+      }
+    }
+
+    renderCart();
+  </script>
+</body>
+</html>
